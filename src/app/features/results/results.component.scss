@@ -1,0 +1,78 @@
+// result.page.scss
+:host {
+  --background: #ffffff;
+  --ion-background-color: #ffffff;
+}
+
+ion-content {
+  --background: #ffffff;
+  --ion-background-color: #ffffff;
+  background: #ffffff;
+}
+
+.center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 2rem;
+  background: #ffffff;
+
+  ion-spinner {
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: var(--muted, #5b6b7c);
+    margin: 0;
+  }
+}
+
+.error-container {
+  text-align: center;
+
+  h3 {
+    color: var(--warn, #ef4444);
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: var(--muted, #5b6b7c);
+    margin-bottom: 2rem;
+  }
+}
+
+.btn {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 12px 18px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+  transition: transform 0.05s ease, opacity 0.25s ease;
+  font-size: 15px;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 200px;
+  margin: 0.5rem 0;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background: var(--brand, #2563eb);
+  color: #fff;
+}
+
+.btn-ghost {
+  background: #fff;
+  color: var(--muted, #5b6b7c);
+  border: 1px solid var(--border, #e2e8f0);
+}
+
+

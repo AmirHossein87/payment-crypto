@@ -1,0 +1,16 @@
+
+<ion-content [fullscreen]="true">
+  @if (isLoading()) {
+    <div class="center-content">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+  } @else if (session()) {
+    <app-payment-details
+      [session]="session()"
+      [displayMode]="'result'"
+      (cancel)="onCancel()">
+    </app-payment-details>
+  } @else {
+    <app-not-found></app-not-found>
+  }
+</ion-content>

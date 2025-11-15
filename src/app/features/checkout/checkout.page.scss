@@ -1,0 +1,289 @@
+/*
+ * This file is a 1:1 copy of your provided CSS, with two
+ * key changes for Angular integration:
+ *
+ * 1. :root has been changed to :host to scope CSS variables
+ * to this component, respecting Angular's encapsulation.
+ * 2. `ion-content` is styled to use your --bg variable.
+ * 3. Styles for the <qrcode> component are added.
+ * 4. A new `.timer.expired` class is added for the timeout.
+ */
+
+:host {
+  /* Light mode palette */
+  --bg: #f7f9fc; /* page background */
+  --card: #ffffff; /* card surface */
+  --text: #0b1220; /* main text */
+  --muted: #5b6b7c; /* secondary text */
+  --border: #e2e8f0; /* borders/dividers */
+  --brand: #2563eb; /* primary brand */
+  --accent: #10b981; /* success */
+  --warn: #ef4444; /* danger */
+  --shadow: 0 10px 25px rgba(15, 23, 42, 0.06);
+  --radius: 20px;
+
+  /* This ensures the Ionic page content uses your background */
+  ion-content {
+    --background: var(--bg);
+  }
+}
+
+/*
+ * All styles below are from your provided HTML
+ */
+* {
+  box-sizing: border-box;
+}
+
+.wrap {
+  max-width: 1050px;
+  margin: clamp(16px, 4vw, 48px) auto;
+  padding: clamp(12px, 2.5vw, 28px);
+}
+.header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.title h1 {
+  font-size: clamp(20px, 2.8vw, 28px);
+  margin: 0;
+}
+.title p {
+  margin: 0.25rem 0 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(16px, 2.5vw, 28px);
+}
+
+.grid {
+  display: grid;
+  gap: clamp(16px, 2.5vw, 28px);
+  grid-template-columns: 1.1fr 0.9fr;
+}
+
+@media (max-width: 880px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.section-title {
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 12px;
+  border: 1px dashed var(--border);
+  border-radius: 12px;
+  background: #ffffff;
+}
+.label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 2px;
+}
+.value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
+  word-break: break-all;
+  font-size: 15px;
+  color: #838383;
+}
+
+.copy-icon {
+  border: none;
+  outline: none;
+  background: var(--brand);
+  color: #fff;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: transform 0.04s ease, background-color 0.2s ease;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+.copy-icon:hover {
+  background: #1d4ed8;
+}
+.copy-icon:active {
+  transform: translateY(1px) scale(0.99);
+}
+.copied {
+  display: none;
+  margin-left: 8px;
+  font-weight: 700;
+  color: var(--accent);
+}
+.copied.show {
+  display: inline;
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.kv .item {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
+}
+.kv .item.less-important strong {
+  display: block;
+  font-size: 12px;
+  color: var(--muted);
+}
+.kv .item.less-important span {
+  display: block;
+  font-size: 16px;
+  margin-top: 6px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.kv .item.more-important strong {
+  display: block;
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 600;
+}
+.kv .item.more-important span {
+  display: block;
+  font-size: 20px;
+  margin-top: 6px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.qr-box {
+  display: grid;
+  gap: 14px;
+  justify-items: center;
+  align-content: start;
+}
+.qr {
+  width: min(280px, 72vw);
+  aspect-ratio: 1/1;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: #fff;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+/* Style for the Angular QR Code component */
+.qr qrcode {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.qr qrcode canvas {
+  /* The library generates a canvas, we force it to size */
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f0f5ff;
+  color: #0b1220;
+  border: 1px solid #d9e3ff;
+  font-variant-numeric: tabular-nums;
+  transition: all 0.3s ease; /* Added transition */
+}
+
+/* New class for expired state */
+.timer.expired {
+  background: #fff5f5;
+  border-color: #fde2e2;
+  color: #991b1b;
+}
+.timer.expired .dot {
+  background: var(--warn);
+}
+
+.timer .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  transition: all 0.3s ease; /* Added transition */
+}
+.timer b {
+  font-size: 18px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.btn {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 12px 18px;
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  transition: transform 0.05s ease, opacity 0.25s ease;
+  font-size: 15px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn-primary {
+  background: var(--brand);
+  color: #fff;
+}
+.btn-ghost {
+  background: #fff;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--muted);
+}
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 14px 0;
+}

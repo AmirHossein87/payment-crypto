@@ -1,0 +1,252 @@
+
+
+
+
+@if (displayMode === 'create') {
+<div class="wrap">
+  <div class="header">
+    <div class="title">
+      @if (isLoading) {
+        <h1 [appSkeleton]="true" skWidth="200px" skHeight="2rem"></h1>
+      } @else {
+        <h1>Pay with Crypto</h1>
+      }
+      @if (isLoading) {
+        <p [appSkeleton]="true" skWidth="80%" skHeight="1rem"></p>
+      } @else {
+        <p>To complete this payment send exactly this amount to the address provided.</p>
+      }
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="grid">
+
+      <section>
+
+        <div class="section-title" [appSkeleton]="isLoading" skWidth="150px">Payment Details</div>
+        <div class="row">
+          <div>
+            <div class="label" [appSkeleton]="isLoading" skWidth="180px">Destination wallet address</div>
+            @if (isLoading) {
+              <div class="value" [appSkeleton]="true" skWidth="90%" skHeight="1.2rem" style="margin-top: 4px;"></div>
+            } @else {
+              <div class="value">{{ session?.receiverWalletAddress }}</div>
+            }
+          </div>
+          <div class="copy-button-wrapper">
+            <button class="copy-icon" type="button" [appSkeleton]="isLoading" aria-label="Copy wallet address"
+              [appCopyToClipboard]="session?.receiverWalletAddress || ''" (copied)="onTextCopied($event)">
+              <ion-icon name="copy-outline" aria-hidden="true" [appSkeleton]="isLoading" skWidth="24px" skHeight="24px"
+                [skCircle]="true"></ion-icon>
+            </button>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+          <div>
+            <div class="label" [appSkeleton]="isLoading" skWidth="120px">Reference code</div>
+            @if (isLoading) {
+              <div class="value" [appSkeleton]="true" skWidth="150px" skHeight="1.2rem" style="margin-top: 4px;"></div>
+            } @else {
+              <div class="value">{{ session?.referenceNumber }}</div>
+            }
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="kv">
+          <div class="item less-important">
+            <strong [appSkeleton]="isLoading" skWidth="100px">Invoice amount</strong>
+            @if (isLoading) {
+              <span [appSkeleton]="true" skWidth="80px" skHeight="1rem"></span>
+            } @else {
+              <span>{{formatAmount(session!.amount.amount)}} {{ session!.amount.currency }}</span>
+            }
+          </div>
+          <div class="item more-important">
+            <strong [appSkeleton]="isLoading" skWidth="130px">Amount to be paid</strong>
+            @if (isLoading) {
+              <span [appSkeleton]="true" skWidth="120px" skHeight="1.2rem"></span>
+            } @else {
+              <span>{{formatAmount(session!.cryptoAmount.amount)}} {{ session!.cryptoAmount.cryptoNetwork.symbol }}</span>
+            }
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="timer" [class.expired]="isTimerExpired">
+          @if (isLoading) {
+            <span [appSkeleton]="true" skWidth="8px" skHeight="8px" [skCircle]="true"></span>
+          } @else {
+            <span class="dot" aria-hidden="true" [ngClass]="timerStatus"></span>
+          }
+          @if (isLoading) {
+            <span [appSkeleton]="true" skWidth="120px" skHeight="1rem"></span>
+          } @else {
+            <span>Time left to pay:</span>
+          }
+          @if (isLoading) {
+            <b [appSkeleton]="true" skWidth="50px" skHeight="1.2rem"></b>
+          } @else {
+            <b [appCountdown]="session!.expireAt" [createdDate]="session!.createdTime"
+              (timerExpired)="timerExpired.emit()"></b>
+          }
+        </div>
+
+
+        <div class="actions actions-desktop">
+          <button
+            class="btn btn-primary"
+            type="button"
+            [disabled]="isLoading || isTimerExpired || isConfirming"
+            [appSkeleton]="isLoading"
+            skHeight="44px"
+            (click)="depositConfirmed.emit()">
+            @if (isConfirming) {
+                <ion-spinner name="crescent" class="btn-spinner"></ion-spinner>
+            } @else {
+                <span>I made the deposit</span>
+            }
+          </button>
+          <button
+            class="btn btn-ghost"
+            type="button"
+            [disabled]="isLoading"
+            [appSkeleton]="isLoading"
+            skHeight="44px"
+            (click)="cancel.emit()">
+            Return to Store
+          </button>
+        </div>
+
+      </section>
+
+      <aside class="qr-box">
+        @if (isLoading) {
+        <p [appSkeleton]="true" skWidth="90%" skHeight="3rem" style="margin: 0 auto;"></p>
+        } @else {
+        <p class="hint" style="text-align: center; max-width: 40ch;">
+          This address is only for depositing
+          <strong>{{ session!.cryptoAmount.cryptoNetwork.symbol }}</strong>
+           on the
+           <strong>{{session!.cryptoAmount.cryptoNetwork.blockchain }} ({{ session!.cryptoAmount.cryptoNetwork.tokenStandard }})</strong>
+          network.
+        </p>
+        }
+        <div class="qr" aria-label="QR code for the destination wallet">
+          @if (isLoading || !qrCodeData) {
+          <div [appSkeleton]="true" skWidth="248px" skHeight="248px"></div>
+          } @else {
+          <qrcode [qrdata]="qrCodeData" [width]="248" [margin]="0" [errorCorrectionLevel]="'H'"></qrcode>
+          }
+        </div>
+        @if (isLoading) {
+        <p [appSkeleton]="true" skWidth="80%" skHeight="2.5rem" style="margin: 16px auto 0;"></p>
+        } @else {
+        <p class="hint" style="text-align: center; max-width: 40ch;">
+          Use your wallet app to scan the QR and send exactly
+          <strong> {{formatAmount(session!.cryptoAmount.amount)}} {{ session!.cryptoAmount.cryptoNetwork.symbol }}</strong>
+          to the address above.
+        </p>
+        }
+      </aside>
+
+      <div class="actions actions-mobile">
+        <button
+          class="btn btn-primary"
+          type="button"
+          [disabled]="isLoading || isTimerExpired || isConfirming"
+          [appSkeleton]="isLoading"
+          skHeight="44px"
+          (click)="depositConfirmed.emit()">
+          @if (isConfirming) {
+              <ion-spinner name="crescent" class="btn-spinner"></ion-spinner>
+          } @else {
+              <span>I made the deposit</span>
+          }
+        </button>
+        <button
+          class="btn btn-ghost"
+          type="button" [disabled]="isLoading"
+          [appSkeleton]="isLoading"
+          skHeight="44px"
+          (click)="cancel.emit()">
+          Return to Store
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+
+<!-- results display tag -->
+
+@if (displayMode === 'result') {
+<div class="wrap-result">
+  <div class="header">
+    <div class="title">
+      <h1>Payment Result</h1>
+      <p>Your payment has been processed</p>
+    </div>
+  </div>
+
+  <div class="result-card">
+    <section>
+
+      <div class="payment-status">
+        <div
+          class="status-icon"
+          [appPaymentStatusIcon]="paymentState"
+          [size]="70">
+        </div>
+
+        <h2 class="status-title" [class]="paymentState.toLowerCase()">
+          {{ this.session?.paymentState }}
+        </h2>
+<!--
+        <p class="status-message">
+          {{ statusMessage }}
+        </p> -->
+      </div>
+
+      <div class="section-title">TRANSACTION DETAILS</div>
+
+      <div class="row">
+        <div>
+          <div class="label">Destination wallet address</div>
+          <div class="value">{{ session?.receiverWalletAddress }}</div>
+        </div>
+
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <div>
+          <div class="label">Reference code</div>
+          <div class="value">{{ session?.referenceNumber }}</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <div>
+          <div class="label">Amount to be paid</div>
+          <div class="value">{{ formatAmount(session!.cryptoAmount.amount) }} {{ session!.cryptoAmount.cryptoNetwork.symbol }}</div>
+        </div>
+      </div>
+
+      <div class="result-actions">
+        <button
+          class="btn btn-result"
+          type="button"
+          [disabled]="isLoading"
+          (click)="cancel.emit()">
+          Return to Store
+        </button>
+      </div>
+    </section>
+  </div>
+</div>
+}

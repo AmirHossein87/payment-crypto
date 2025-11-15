@@ -1,0 +1,7 @@
+{
+  "name": "payment-crypto-ui",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

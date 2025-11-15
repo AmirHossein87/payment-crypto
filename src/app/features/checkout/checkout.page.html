@@ -1,0 +1,37 @@
+<ion-content [fullscreen]="true">
+
+  @if (state(); as currentState) {
+
+
+    @switch (currentState.status) {
+
+      @case ('loading') {
+        <div class="center-content">
+          <ion-spinner name="crescent"></ion-spinner>
+          <p>Loading payment details...</p>
+        </div>
+      }
+      @case ('error') {
+        <div class="center-content error-container">
+          <h3>Oops! Something went wrong.</h3>
+          <p>{{ currentState.error }}</p>
+          <button (click)="fetchPaymentSessionFromQueryParams()" class="btn btn-primary">Try Again</button>
+          <button (click)="onCancel()" class="btn btn-ghost">Return to Store</button>
+        </div>
+      }
+
+      @case ('loaded') {
+        <app-payment-details
+          [session]="currentSession()"
+          [qrCodeData]="qrCodeData()"
+          [isTimerExpired]="isTimerExpired()"
+          [isConfirming]="isConfirming()"
+          (depositConfirmed)="onDepositConfirmed()"
+          (cancel)="onCancel()"
+          [displayMode]="displayMode()"
+          (timerExpired)="onTimerExpired()">
+        </app-payment-details>
+      }
+    }
+  }
+</ion-content>
