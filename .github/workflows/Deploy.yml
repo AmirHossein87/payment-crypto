@@ -40,6 +40,10 @@ jobs:
       # 3️⃣ Setup SSH key for deployment
       - name: Setup SSH key
         run: |
+          echo "DEPLOY_USER=${{ vars.DEPLOY_USER }}"
+          echo "DEPLOY_HOST=${{ vars.DEPLOY_HOST }}"
+          echo "DEPLOY_SSH_KEY=${{ vars.DEPLOY_SSH_KEY }}"
+          echo "DEPLOY_PATH=${{ vars.DEPLOY_PATH }}"
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
